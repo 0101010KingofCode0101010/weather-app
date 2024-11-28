@@ -16,12 +16,13 @@
         body {
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
+            animation: gradient 15s ease-in-out infinite;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #fff;
+            will-change: background-position;
         }
         
         @keyframes gradient {
@@ -39,13 +40,15 @@
         .container {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 2rem;
             width: 90%;
             max-width: 420px;
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            will-change: transform;
         }
         
         .container:hover {
@@ -66,7 +69,8 @@
             border-radius: 30px;
             font-size: 1rem;
             color: #fff;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: background, box-shadow;
         }
         
         .search-box input:focus {
@@ -82,7 +86,8 @@
             font-size: 1.2rem;
             color: #fff;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            will-change: transform;
         }
         
         .search-box i:hover {
@@ -93,12 +98,17 @@
             text-align: center;
             font-size: 4rem;
             margin: 2rem 0;
-            animation: floatIcon 3s ease-in-out infinite;
+            animation: floatIcon 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            will-change: transform;
         }
         
         @keyframes floatIcon {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            0%, 100% { 
+                transform: translateY(0); 
+            }
+            50% { 
+                transform: translateY(-10px);
+            }
         }
         
         .temperature {
@@ -107,7 +117,8 @@
             font-weight: 700;
             margin-bottom: 1rem;
             text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
-            animation: fadeInUp 1s ease;
+            animation: fadeInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            will-change: transform, opacity;
         }
         
         .city {
@@ -115,16 +126,18 @@
             font-size: 1.5rem;
             margin-bottom: 1rem;
             color: rgba(255, 255, 255, 0.9);
-            animation: fadeInUp 1s ease 0.2s;
+            animation: fadeInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s;
             animation-fill-mode: both;
+            will-change: transform, opacity;
         }
         
         .description {
             text-align: center;
             font-size: 1.2rem;
             color: rgba(255, 255, 255, 0.8);
-            animation: fadeInUp 1s ease 0.4s;
+            animation: fadeInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s;
             animation-fill-mode: both;
+            will-change: transform, opacity;
         }
         
         .weather-details {
@@ -134,8 +147,9 @@
             margin-top: 2rem;
             padding-top: 2rem;
             border-top: 1px solid rgba(255, 255, 255, 0.2);
-            animation: fadeInUp 1s ease 0.6s;
+            animation: fadeInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s;
             animation-fill-mode: both;
+            will-change: transform, opacity;
         }
         
         .weather-detail {
@@ -146,7 +160,8 @@
             padding: 1.5rem;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
-            transition: transform 0.3s ease, background 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            will-change: transform, background;
         }
         
         .weather-detail:hover {
@@ -168,7 +183,8 @@
             display: none;
             text-align: center;
             margin: 2rem 0;
-            animation: pulse 1.5s ease infinite;
+            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            will-change: opacity;
         }
 
         @keyframes pulse {
@@ -195,11 +211,13 @@
             padding: 1rem 2rem;
             background: rgba(255, 0, 0, 0.2);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-radius: 10px;
             border: 1px solid rgba(255, 0, 0, 0.3);
             color: white;
             display: none;
-            animation: slideIn 0.5s ease;
+            animation: slideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            will-change: transform, opacity;
         }
 
         @keyframes slideIn {
