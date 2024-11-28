@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thời tiết</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -13,7 +14,9 @@
         }
         
         body {
-            background: #1a1b1e;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -21,29 +24,43 @@
             color: #fff;
         }
         
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
         .container {
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.18);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 2rem;
             width: 90%;
             max-width: 420px;
-            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            transition: transform 0.3s ease;
+        }
+        
+        .container:hover {
+            transform: translateY(-5px);
         }
         
         .search-box {
             position: relative;
             margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
         }
         
         .search-box input {
             width: 100%;
             padding: 1rem 3rem 1rem 1.5rem;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.2);
             border: none;
             outline: none;
             border-radius: 30px;
@@ -53,24 +70,35 @@
         }
         
         .search-box input:focus {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
         
-        .search-box button {
+        .search-box i {
             position: absolute;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
             color: #fff;
             cursor: pointer;
-            padding: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .search-box i:hover {
+            transform: translateY(-50%) scale(1.1);
         }
         
         .weather-icon {
             text-align: center;
-            margin: 2rem 0;
             font-size: 4rem;
+            margin: 2rem 0;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+        
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         
         .temperature {
@@ -78,14 +106,25 @@
             font-size: 4rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease;
         }
         
         .city {
             text-align: center;
             font-size: 1.5rem;
-            margin-bottom: 2rem;
-            color: rgba(255,255,255,0.8);
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            animation: fadeInUp 1s ease 0.2s;
+            animation-fill-mode: both;
+        }
+        
+        .description {
+            text-align: center;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            animation: fadeInUp 1s ease 0.4s;
+            animation-fill-mode: both;
         }
         
         .weather-details {
@@ -94,7 +133,9 @@
             gap: 2rem;
             margin-top: 2rem;
             padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 1s ease 0.6s;
+            animation-fill-mode: both;
         }
         
         .weather-detail {
@@ -102,40 +143,78 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            padding: 1rem;
-            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        
+        .weather-detail:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .weather-detail i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
         }
         
         .weather-detail span {
-            font-size: 1.5rem;
-            margin-top: 0.5rem;
-        }
-        
-        .description {
-            text-align: center;
             font-size: 1.2rem;
-            color: rgba(255,255,255,0.8);
+            margin-top: 0.5rem;
         }
 
         .loading {
             display: none;
             text-align: center;
-            margin: 1rem 0;
-            color: rgba(255,255,255,0.8);
+            margin: 2rem 0;
+            animation: pulse 1.5s ease infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 2rem;
+            background: rgba(255, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: white;
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         ::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .weather-info {
-            animation: fadeIn 0.5s ease;
+            color: rgba(255, 255, 255, 0.6);
         }
     </style>
 </head>
@@ -143,46 +222,62 @@
     <div class="container">
         <div class="search-box">
             <input type="text" placeholder="Tìm kiếm thành phố..." id="city-input">
-            <button onclick="getWeather()">🔍</button>
+            <i class="fas fa-search" onclick="getWeather()"></i>
         </div>
-        <div class="loading" id="loading">⏳ Đang tải...</div>
+        <div class="loading" id="loading">
+            <i class="fas fa-spinner fa-spin fa-2x"></i>
+        </div>
         <div class="weather-info">
-            <div class="weather-icon" id="weather-icon">🌤️</div>
+            <div class="weather-icon" id="weather-icon">
+                <i class="fas fa-sun"></i>
+            </div>
             <div class="temperature" id="temp">--°C</div>
             <div class="city" id="city">--</div>
             <div class="description" id="description">--</div>
             <div class="weather-details">
                 <div class="weather-detail">
-                    <div>💧 Độ ẩm</div>
+                    <i class="fas fa-water"></i>
+                    <div>Độ ẩm</div>
                     <span id="humidity">--%</span>
                 </div>
                 <div class="weather-detail">
-                    <div>💨 Tốc độ gió</div>
+                    <i class="fas fa-wind"></i>
+                    <div>Tốc độ gió</div>
                     <span id="wind">-- km/h</span>
                 </div>
             </div>
         </div>
     </div>
+    <div class="error-message" id="error-message"></div>
 
     <script>
         const weatherIcons = {
-            0: '☀️', // Clear sky
-            1: '🌤️', // Mainly clear
-            2: '⛅', // Partly cloudy
-            3: '☁️', // Overcast
-            45: '🌫️', // Foggy
-            48: '🌫️', // Depositing rime fog
-            51: '🌦️', // Light drizzle
-            53: '🌦️', // Moderate drizzle
-            55: '🌧️', // Dense drizzle
-            61: '🌧️', // Slight rain
-            63: '🌧️', // Moderate rain
-            65: '🌧️', // Heavy rain
-            71: '🌨️', // Slight snow
-            73: '🌨️', // Moderate snow
-            75: '🌨️', // Heavy snow
-            95: '⛈️', // Thunderstorm
+            0: 'fa-sun',
+            1: 'fa-sun',
+            2: 'fa-cloud-sun',
+            3: 'fa-cloud',
+            45: 'fa-smog',
+            48: 'fa-smog',
+            51: 'fa-cloud-rain',
+            53: 'fa-cloud-rain',
+            55: 'fa-cloud-showers-heavy',
+            61: 'fa-cloud-rain',
+            63: 'fa-cloud-showers-heavy',
+            65: 'fa-cloud-showers-heavy',
+            71: 'fa-snowflake',
+            73: 'fa-snowflake',
+            75: 'fa-snowflake',
+            95: 'fa-bolt'
         };
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 3000);
+        }
 
         async function getWeather() {
             const cityInput = document.getElementById('city-input').value;
@@ -225,15 +320,16 @@
                 };
 
                 const weatherCode = weatherData.current.weather_code;
+                const iconClass = weatherIcons[weatherCode] || 'fa-cloud';
                 
-                document.getElementById('weather-icon').textContent = weatherIcons[weatherCode] || '🌈';
+                document.getElementById('weather-icon').innerHTML = `<i class="fas ${iconClass}"></i>`;
                 document.getElementById('city').textContent = name;
                 document.getElementById('temp').textContent = `${Math.round(weatherData.current.temperature_2m)}°C`;
                 document.getElementById('description').textContent = weatherDescriptions[weatherCode] || 'Không xác định';
                 document.getElementById('humidity').textContent = `${Math.round(weatherData.current.relative_humidity_2m)}%`;
                 document.getElementById('wind').textContent = `${Math.round(weatherData.current.wind_speed_10m)} km/h`;
             } catch (error) {
-                alert('Không tìm thấy thành phố hoặc có lỗi xảy ra. Vui lòng thử lại!');
+                showError('Không tìm thấy thành phố hoặc có lỗi xảy ra. Vui lòng thử lại!');
                 console.error('Error:', error);
             } finally {
                 document.getElementById('loading').style.display = 'none';
