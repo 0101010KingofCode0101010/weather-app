@@ -264,26 +264,7 @@
 
         <h2 class="forecast-title">Dự báo 7 ngày tới</h2>
         <div class="forecast-container">
-            <div class="forecast-card" style="animation-delay: 0.1s">
-                <div class="forecast-date">Th 5, 28 thg 11</div>
-                <i class="fas fa-cloud fa-2x"></i>
-                <div class="forecast-temp">24°C / 16°C</div>
-            </div>
-            <div class="forecast-card" style="animation-delay: 0.2s">
-                <div class="forecast-date">Th 6, 29 thg 11</div>
-                <i class="fas fa-cloud fa-2x"></i>
-                <div class="forecast-temp">24°C / 15°C</div>
-            </div>
-            <div class="forecast-card" style="animation-delay: 0.3s">
-                <div class="forecast-date">Th 7, 30 thg 11</div>
-                <i class="fas fa-cloud fa-2x"></i>
-                <div class="forecast-temp">25°C / 16°C</div>
-            </div>
-            <div class="forecast-card" style="animation-delay: 0.4s">
-                <div class="forecast-date">CN, 1 thg 12</div>
-                <i class="fas fa-cloud fa-2x"></i>
-                <div class="forecast-temp">26°C / 16°C</div>
-            </div>
+            <!-- Dự báo cho các ngày sẽ được thêm qua JavaScript -->
         </div>
 
         <div class="sun-info">
@@ -299,5 +280,52 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('search-input').addEventListener('keyup', function(event) {
+            const cityName = event.target.value;
+
+            if (cityName.length > 2) {  // Chỉ thực hiện khi người dùng nhập ít nhất 3 ký tự
+                fetchWeatherData(cityName);
+            }
+        });
+
+        async function fetchWeatherData(city) {
+            const apiUrl = `https://api.weatherapi.com/v1/current.json?key=1c48a351c9c84ef89f3132827241905&q=${city}&lang=vi`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data.error) {
+                    alert("Không tìm thấy thành phố");
+                    return;
+                }
+
+                updateWeatherUI(data);
+            } catch (error) {
+                console.error('Lỗi khi lấy dữ liệu thời tiết:', error);
+            }
+        }
+
+        function updateWeatherUI(data) {
+            document.querySelector('.current-weather .location').textContent = data.location.name;
+            document.querySelector('.current-weather .temperature').textContent = `${data.current.temp_c}°C`;
+            document.querySelector('.current-weather .description').textContent = data.current.condition.text;
+
+            const forecastContainer = document.querySelector('.forecast-container');
+            forecastContainer.innerHTML = '';
+            data.forecast.forecastday.forEach(forecast => {
+                const forecastCard = document.createElement('div');
+                forecastCard.classList.add('forecast-card');
+                forecastCard.innerHTML = `
+                    <div class="forecast-date">${forecast.date}</div>
+                    <div class="forecast-temp">${forecast.day.avgtemp_c}°C</div>
+                    <div class="forecast-condition">${forecast.day.condition.text}</div>
+                `;
+                forecastContainer.appendChild(forecastCard);
+            });
+        }
+    </script>
 </body>
 </html>
