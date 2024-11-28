@@ -1,113 +1,189 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App</title>
+    <title>Thời tiết</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
         
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #00b4db, #0083b0);
-            height: 100vh;
+            background: #1a1b1e;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            color: #fff;
         }
         
         .container {
-            background: rgba(255, 255, 255, 0.9);
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.18);
             padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 400px;
             width: 90%;
+            max-width: 420px;
+            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37);
         }
         
         .search-box {
+            position: relative;
             margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
         }
         
-        input {
-            padding: 0.5rem 1rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-right: 0.5rem;
-            font-size: 1rem;
-            width: 60%;
-        }
-        
-        button {
-            padding: 0.5rem 1rem;
-            background: #0083b0;
-            color: white;
+        .search-box input {
+            width: 100%;
+            padding: 1rem 3rem 1rem 1.5rem;
+            background: rgba(255,255,255,0.1);
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            outline: none;
+            border-radius: 30px;
             font-size: 1rem;
+            color: #fff;
+            transition: all 0.3s ease;
         }
         
-        button:hover {
-            background: #00b4db;
+        .search-box input:focus {
+            background: rgba(255,255,255,0.2);
         }
         
-        .weather-info {
-            margin-top: 1rem;
+        .search-box button {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #fff;
+            cursor: pointer;
+            padding: 0.5rem;
         }
         
-        .temp {
-            font-size: 3rem;
-            margin: 1rem 0;
+        .weather-icon {
+            text-align: center;
+            margin: 2rem 0;
+            font-size: 4rem;
+        }
+        
+        .temperature {
+            text-align: center;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .city {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .weather-detail {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+        }
+        
+        .weather-detail span {
+            font-size: 1.5rem;
+            margin-top: 0.5rem;
         }
         
         .description {
+            text-align: center;
             font-size: 1.2rem;
-            margin-bottom: 1rem;
-        }
-        
-        .details {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 2rem;
+            color: rgba(255,255,255,0.8);
         }
 
         .loading {
             display: none;
+            text-align: center;
             margin: 1rem 0;
+            color: rgba(255,255,255,0.8);
+        }
+
+        ::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .weather-info {
+            animation: fadeIn 0.5s ease;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="search-box">
-            <input type="text" placeholder="Nhập tên thành phố..." id="city-input">
-            <button onclick="getWeather()">Tìm kiếm</button>
+            <input type="text" placeholder="Tìm kiếm thành phố..." id="city-input">
+            <button onclick="getWeather()">🔍</button>
         </div>
-        <div class="loading" id="loading">Đang tải...</div>
+        <div class="loading" id="loading">⏳ Đang tải...</div>
         <div class="weather-info">
-            <h2 id="city">--</h2>
-            <div class="temp" id="temp">--°C</div>
+            <div class="weather-icon" id="weather-icon">🌤️</div>
+            <div class="temperature" id="temp">--°C</div>
+            <div class="city" id="city">--</div>
             <div class="description" id="description">--</div>
-            <div class="details">
-                <div>
-                    <p>Độ ẩm</p>
-                    <p id="humidity">--%</p>
+            <div class="weather-details">
+                <div class="weather-detail">
+                    <div>💧 Độ ẩm</div>
+                    <span id="humidity">--%</span>
                 </div>
-                <div>
-                    <p>Gió</p>
-                    <p id="wind">-- km/h</p>
+                <div class="weather-detail">
+                    <div>💨 Tốc độ gió</div>
+                    <span id="wind">-- km/h</span>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        const weatherIcons = {
+            0: '☀️', // Clear sky
+            1: '🌤️', // Mainly clear
+            2: '⛅', // Partly cloudy
+            3: '☁️', // Overcast
+            45: '🌫️', // Foggy
+            48: '🌫️', // Depositing rime fog
+            51: '🌦️', // Light drizzle
+            53: '🌦️', // Moderate drizzle
+            55: '🌧️', // Dense drizzle
+            61: '🌧️', // Slight rain
+            63: '🌧️', // Moderate rain
+            65: '🌧️', // Heavy rain
+            71: '🌨️', // Slight snow
+            73: '🌨️', // Moderate snow
+            75: '🌨️', // Heavy snow
+            95: '⛈️', // Thunderstorm
+        };
+
         async function getWeather() {
             const cityInput = document.getElementById('city-input').value;
             if (!cityInput) return;
@@ -115,7 +191,6 @@
             document.getElementById('loading').style.display = 'block';
 
             try {
-                // First, get coordinates for the city
                 const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityInput)}&count=1&language=vi`;
                 const geoResponse = await fetch(geoUrl);
                 const geoData = await geoResponse.json();
@@ -126,14 +201,12 @@
 
                 const { latitude, longitude, name } = geoData.results[0];
 
-                // Then, get weather data using coordinates
                 const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code`;
                 const weatherResponse = await fetch(weatherUrl);
                 const weatherData = await weatherResponse.json();
 
-                // Weather code to description mapping
                 const weatherDescriptions = {
-                    0: 'Trời quang',
+                    0: 'Trời quang đãng',
                     1: 'Ít mây',
                     2: 'Nhiều mây',
                     3: 'U ám',
@@ -143,17 +216,20 @@
                     53: 'Mưa phùn',
                     55: 'Mưa phùn nặng',
                     61: 'Mưa nhẹ',
-                    63: 'Mưa',
-                    65: 'Mưa nặng',
+                    63: 'Mưa vừa',
+                    65: 'Mưa to',
                     71: 'Tuyết nhẹ',
-                    73: 'Tuyết',
-                    75: 'Tuyết nặng',
+                    73: 'Tuyết vừa',
+                    75: 'Tuyết dày',
                     95: 'Giông bão'
                 };
 
+                const weatherCode = weatherData.current.weather_code;
+                
+                document.getElementById('weather-icon').textContent = weatherIcons[weatherCode] || '🌈';
                 document.getElementById('city').textContent = name;
                 document.getElementById('temp').textContent = `${Math.round(weatherData.current.temperature_2m)}°C`;
-                document.getElementById('description').textContent = weatherDescriptions[weatherData.current.weather_code] || 'Không xác định';
+                document.getElementById('description').textContent = weatherDescriptions[weatherCode] || 'Không xác định';
                 document.getElementById('humidity').textContent = `${Math.round(weatherData.current.relative_humidity_2m)}%`;
                 document.getElementById('wind').textContent = `${Math.round(weatherData.current.wind_speed_10m)} km/h`;
             } catch (error) {
@@ -164,7 +240,6 @@
             }
         }
 
-        // Thêm sự kiện Enter cho input
         document.getElementById('city-input').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 getWeather();
